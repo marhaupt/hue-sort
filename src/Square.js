@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { darken, complement } from 'polished';
 
 const Squarish = styled.p`
   margin: 0;
@@ -7,31 +8,37 @@ const Squarish = styled.p`
   transform: ${props => props.selected && 'scale(1.1)'};
   border: 0.5vmin solid
     ${props =>
-      props.position === props.index ? 'transparent' : 'rgba(80, 80, 80, 0.2)'};
-  background-color: hsl(
-    ${props => props.hue},
-    ${props => props.saturation}%,
-    ${props => props.lightness}%
-  );
+      props.position === props.index ? 'transparent' : props.colors.border};
+  background-color: ${props => props.colors.normal};
+  grid-area: ${props => props.placement};
 
   &:hover {
-    background-color: hsl(
-      ${props => props.hue},
-      ${props => 0.8 * props.saturation}%,
-      ${props => 0.8 * props.lightness}%
-    );
+    background-color: ${props => props.colors.hover};
   }
 `;
 
-const Square = props => {
+const Square = ({ hue, saturation, lightness, index, size, ...props }) => {
   const toggleSelected = props.toggleSelected.bind(this);
-  return <Squarish onClick={toggleSelected} id={props.index} {...props} />;
+  const colors = {};
+
+  colors.normal = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  colors.hover = darken(0.2, colors.normal);
+
+  colors.border = complement(`hsla(${hue}, 65%, 55%, 0.8)`);
+
+  const placement = `${Math.floor(index / size) + 1} / ${index % size +
+    1} / span 1 / span 1`;
+
+  return (
+    <Squarish
+      onClick={toggleSelected}
+      id={index}
+      colors={colors}
+      {...props}
+      placement={placement}
+      index={index}
+    />
+  );
 };
 
 export default Square;
-
-// box-shadow: 0.1vmin 0.3vmin
-//   ${props =>
-//     props.selected
-//       ? '0.1vmin 0.3vmin rgba(30,30,30,0.7)'
-//       : '1vmin 0 rgba(80,80,80,0.5)'};
