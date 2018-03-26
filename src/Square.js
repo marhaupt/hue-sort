@@ -5,7 +5,7 @@ import { darken, complement } from 'polished';
 const Squarish = styled.p`
   margin: 0;
   transition: all 200ms ease-in-out;
-  transform: ${props => props.selected && 'scale(1.1)'};
+  transform: ${props => props.selected && 'scale(1.15)'};
   border: 0.5vmin solid
     ${props =>
       props.position === props.index ? 'transparent' : props.colors.border};
@@ -14,6 +14,7 @@ const Squarish = styled.p`
 
   &:hover {
     background-color: ${props => props.colors.hover};
+    transform: scale(1.15);
   }
 `;
 

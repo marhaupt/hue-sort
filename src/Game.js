@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Square from './Square';
+import Score from './Score';
 
 const GameContainer = styled.main`
   background-color: hsl(${props => props.hue}, 90%, 80%);
@@ -25,38 +26,6 @@ const Squares = styled.div`
     );
 `;
 
-const show = keyframes`
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-`;
-
-const Scorish = styled.div`
-  background-color: rgba(50, 50, 50, 0.5);
-  grid-area: 1 / 1 / -1 / -1;
-  text-transform: uppercase;
-  font-size: 14vmin;
-  color: rgba(240, 240, 240, 0.9);
-  text-align: center;
-  font-family: monospace;
-  display: flex;
-  padding: 10vmin 15vmin 20vmin 10vmin;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  animation: ${show} 500ms ease-in-out 150ms forwards;
-`;
-
-const Score = ({ moves }) => (
-  <Scorish>
-    You won<br />in {moves} move{(moves > 1 || moves === 0) && 's'}
-  </Scorish>
-);
-
 class Game extends Component {
   state = {
     size: 6,
@@ -71,11 +40,11 @@ class Game extends Component {
 
     const hue = Math.floor(Math.random() * 360);
 
-    const minS = 20;
+    const minS = 10;
     const maxS = 90;
 
-    const minL = 25;
-    const maxL = 80;
+    const minL = 20;
+    const maxL = 85;
 
     const stepS = (maxS - minS) / (size - 1);
     const stepL = (maxL - minL) / (size - 1);
@@ -88,12 +57,16 @@ class Game extends Component {
 
     squares = this.randomizeSquares(squares);
 
-    this.setState({ squares, hue });
+    this.setState({ squares, hue, moves: 0, selectedIndex: -1 });
   };
 
   componentDidMount() {
     this.gameSetup();
   }
+
+  newGame = () => {
+    this.gameSetup();
+  };
 
   toggleSelected = e => {
     let { squares, selectedIndex, moves } = this.state;
@@ -180,7 +153,9 @@ class Game extends Component {
               size={size}
             />
           ))}
-          {this.checkWin(squares) && <Score moves={moves} />}
+          {this.checkWin(squares) && (
+            <Score moves={moves} newGame={this.newGame} hue={hue} />
+          )}
         </Squares>
       </GameContainer>
     );
