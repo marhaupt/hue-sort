@@ -13,8 +13,8 @@ const Squarish = styled.p`
   grid-area: ${props => props.placement};
 
   &:hover {
-    background-color: ${props => props.colors.hover};
     transform: scale(1.15);
+    box-shadow: 0.1vmin 0.3vmin 1vmin ${props => props.colors.hover};
   }
 `;
 
