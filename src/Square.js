@@ -3,18 +3,16 @@ import styled from 'styled-components';
 
 const Squarish = styled.p`
   margin: 0;
-  border-radius: 1%;
-  box-shadow: 0.1vmin 0.3vmin
+  transition: all 200ms ease-in-out;
+  transform: ${props => props.selected && 'scale(1.1)'};
+  border: 0.5vmin solid
     ${props =>
-      props.selected
-        ? '0.1vmin 0.3vmin rgba(30,30,30,0.7)'
-        : '1vmin 0 rgba(80,80,80,0.5)'};
+      props.position === props.index ? 'transparent' : 'rgba(80, 80, 80, 0.2)'};
   background-color: hsl(
     ${props => props.hue},
     ${props => props.saturation}%,
     ${props => props.lightness}%
   );
-  transition: all 200ms ease-in-out;
 
   &:hover {
     background-color: hsl(
@@ -31,3 +29,9 @@ const Square = props => {
 };
 
 export default Square;
+
+// box-shadow: 0.1vmin 0.3vmin
+//   ${props =>
+//     props.selected
+//       ? '0.1vmin 0.3vmin rgba(30,30,30,0.7)'
+//       : '1vmin 0 rgba(80,80,80,0.5)'};
