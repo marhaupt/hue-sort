@@ -1,30 +1,8 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import Square from './Square';
 import Score from './Score';
-
-const GameContainer = styled.main`
-  background-color: hsl(${props => props.hue}, 90%, 80%);
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Squares = styled.div`
-  color: #f0f0f0;
-  height: 96vmin;
-  width: 96vmin;
-  /* margin: 3vmin; */
-  display: grid;
-  /* grid-gap: 1.5vmin; */
-  box-shadow: 0.1vmin 0.3vmin 1vmin 0 rgba(80, 80, 80, 0.5);
-  grid-template: repeat(${props => props.size}, 1fr) / repeat(
-      ${props => props.size},
-      1fr
-    );
-`;
+import { GameContainer, Squares } from './GameContainer';
+import { checkWin, switchSquares, randomizeSquares } from './logic';
 
 class Game extends Component {
   state = {
@@ -55,7 +33,7 @@ class Game extends Component {
       return { saturation, lightness, position: i, selected: false };
     });
 
-    squares = this.randomizeSquares(squares);
+    squares = randomizeSquares(squares);
 
     this.setState({ squares, hue, moves: 0, selectedIndex: -1 });
   };
@@ -81,58 +59,12 @@ class Game extends Component {
       squares[id].selected = !prevSel;
       selectedIndex = -1;
     } else {
-      squares = this.switchSquares(squares, id, selectedIndex);
+      squares = switchSquares(squares, id, selectedIndex);
       moves++;
       selectedIndex = -1;
     }
 
     this.setState({ squares, selectedIndex, moves });
-  };
-
-  switchSquares = (squares, first, second) => {
-    const firstSquare = Object.assign({}, squares[first]);
-    const secondSquare = Object.assign({}, squares[second]);
-
-    squares[first] = secondSquare;
-    squares[second] = firstSquare;
-
-    squares[first].selected = false;
-    squares[second].selected = false;
-
-    return squares;
-  };
-
-  randomizeSquares = (squares, difficulty) => {
-    const size = Math.sqrt(squares.length);
-
-    difficulty = difficulty || size;
-
-    let problemIndex = [0, size - 1, squares.length - size, squares.length - 1];
-
-    for (let i = 0; i < difficulty; i++) {
-      let first = 0;
-      while (problemIndex.includes(first)) {
-        first = Math.floor(Math.random() * size ** 2);
-      }
-
-      let second = 0;
-      while ([...problemIndex, first].includes(second)) {
-        second = Math.floor(Math.random() * size ** 2);
-      }
-
-      squares = this.switchSquares(squares, first, second);
-    }
-
-    return squares;
-  };
-
-  checkWin = squares => {
-    let troubles = 0;
-    squares.forEach((sq, i) => {
-      if (sq.position !== i) troubles++;
-    });
-
-    return troubles > 0 ? false : true;
   };
 
   render() {
@@ -153,7 +85,7 @@ class Game extends Component {
               size={size}
             />
           ))}
-          {this.checkWin(squares) && (
+          {checkWin(squares) && (
             <Score moves={moves} newGame={this.newGame} hue={hue} />
           )}
         </Squares>
