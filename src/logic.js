@@ -20,10 +20,8 @@ export const switchSquares = (squares, first, second) => {
   return squares;
 };
 
-export const randomizeSquares = (squares, difficulty) => {
+export const randomizeSquares = (squares, difficulty = 1) => {
   const size = Math.sqrt(squares.length);
-
-  difficulty = difficulty || 1;
 
   let problemIndex = [0, size - 1, squares.length - size, squares.length - 1];
 

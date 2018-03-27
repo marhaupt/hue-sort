@@ -10,11 +10,12 @@ class Game extends Component {
     hue: 100,
     squares: [],
     moves: 0,
-    selectedIndex: -1
+    selectedIndex: -1,
+    difficulty: 1
   };
 
   gameSetup = () => {
-    const { size } = this.state;
+    let { size, difficulty } = this.state;
 
     const hue = Math.floor(Math.random() * 360);
 
@@ -33,9 +34,11 @@ class Game extends Component {
       return { saturation, lightness, position: i, selected: false };
     });
 
-    squares = randomizeSquares(squares);
+    squares = randomizeSquares(squares, difficulty);
 
-    this.setState({ squares, hue, moves: 0, selectedIndex: -1 });
+    difficulty++;
+
+    this.setState({ squares, hue, difficulty, moves: 0, selectedIndex: -1 });
   };
 
   componentDidMount() {
